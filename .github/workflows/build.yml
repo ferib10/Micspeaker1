@@ -10,25 +10,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: دانلود کد
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: نصب Java
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: نصب Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.9'
-
       - name: ساخت APK
-        run: gradle assembleDebug
+        run: |
+          wget https://services.gradle.org/distributions/gradle-8.6-bin.zip -O gradle.zip
+          unzip gradle.zip
+          ./gradle-8.6/bin/gradle assembleDebug
 
-      - name: آپلود APK
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: MicSpeaker-APK
           path: app/build/outputs/apk/debug/app-debug.apk
