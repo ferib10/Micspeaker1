@@ -1,0 +1,7 @@
+<resources>
+    <style name="Theme.MicSpeaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#2962FF</item>
+        <item name="colorPrimaryDark">#0039CB</item>
+        <item name="colorAccent">#FF6D00</item>
+    </style>
+</resources>

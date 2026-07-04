@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="#121212">
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="خاموش"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:layout_marginBottom="40dp" />
+
+    <Button
+        android:id="@+id/toggleButton"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:text="شروع"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/circle_button" />
+
+    <TextView
+        android:id="@+id/hintText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="اول به اسپیکر بلوتوث وصل شو، بعد دکمه را بزن"
+        android:textColor="#AAAAAA"
+        android:textSize="14sp"
+        android:layout_marginTop="40dp"
+        android:gravity="center" />
+
+</LinearLayout>
