@@ -22,7 +22,7 @@ jobs:
       - name: نصب Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: '8.6'
+          gradle-version: '8.9'
 
       - name: ساخت APK
         run: gradle assembleDebug
