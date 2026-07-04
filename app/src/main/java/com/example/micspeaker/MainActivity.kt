@@ -1,7 +1,6 @@
 package com.example.micspeaker
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -55,4 +54,58 @@ class MainActivity : AppCompatActivity() {
             != PackageManager.PERMISSION_GRANTED) {
             needed.add(Manifest.permission.RECORD_AUDIO)
         }
-        if (Build.VERSION
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
+            != PackageManager.PERMISSION_GRANTED) {
+            needed.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+
+        if (needed.isNotEmpty()) {
+            requestPermissionLauncher.launch(needed.toTypedArray())
+        } else {
+            startMic()
+        }
+    }
+
+    private fun startMic() {
+        @Suppress("DEPRECATION")
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+            audioManager.isBluetoothScoOn = true
+            @Suppress("DEPRECATION")
+            audioManager.startBluetoothSco()
+        }
+
+        val serviceIntent = Intent(this, MicForegroundService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(serviceIntent)
+        } else {
+            startService(serviceIntent)
+        }
+
+        isActive = true
+        statusText.text = "روشن — در حال پخش زنده"
+        toggleButton.text = "توقف"
+    }
+
+    private fun stopMic() {
+        val stopIntent = Intent(this, MicForegroundService::class.java).apply {
+            action = MicForegroundService.ACTION_STOP
+        }
+        startService(stopIntent)
+
+        @Suppress("DEPRECATION")
+        audioManager.stopBluetoothSco()
+        @Suppress("DEPRECATION")
+        audioManager.isBluetoothScoOn = false
+
+        isActive = false
+        statusText.text = "خاموش"
+        toggleButton.text = "شروع"
+    }
+
+    override fun onDestroy() {
+        if (isActive) stopMic()
+        super.onDestroy()
+    }
+}
