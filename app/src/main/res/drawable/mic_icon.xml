@@ -10,16 +10,10 @@
     <path
         android:fillColor="#FFFFFF"
         android:pathData="M17,12C17,14.761 14.761,17 12,17C9.239,17 7,14.761 7,12L5,12C5,15.866 7.858,19.076 11.5,19.5L11.5,22L12.5,22L12.5,19.5C16.142,19.076 19,15.866 19,12L17,12Z"/>
-    <rect
+    <path
         android:fillColor="#FFFFFF"
-        android:left="11"
-        android:top="21"
-        android:right="13"
-        android:bottom="23"/>
-    <rect
+        android:pathData="M11,21L13,21L13,23L11,23Z"/>
+    <path
         android:fillColor="#FFFFFF"
-        android:left="9"
-        android:top="22"
-        android:right="15"
-        android:bottom="24"/>
+        android:pathData="M9,22L15,22L15,24L9,24Z"/>
 </vector>
