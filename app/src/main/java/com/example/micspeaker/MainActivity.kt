@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
             != PackageManager.PERMISSION_GRANTED) {
             needed.add(Manifest.permission.BLUETOOTH_CONNECT)
         }
-
         if (needed.isNotEmpty()) {
             requestPermissionLauncher.launch(needed.toTypedArray())
         } else {
@@ -68,13 +67,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startMic() {
-        @Suppress("DEPRECATION")
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-            audioManager.isBluetoothScoOn = true
-            @Suppress("DEPRECATION")
-            audioManager.startBluetoothSco()
-        }
+        audioManager.mode = AudioManager.MODE_NORMAL
+        audioManager.isSpeakerphoneOn = false
 
         val serviceIntent = Intent(this, MicForegroundService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -93,11 +87,6 @@ class MainActivity : AppCompatActivity() {
             action = MicForegroundService.ACTION_STOP
         }
         startService(stopIntent)
-
-        @Suppress("DEPRECATION")
-        audioManager.stopBluetoothSco()
-        @Suppress("DEPRECATION")
-        audioManager.isBluetoothScoOn = false
 
         isActive = false
         statusText.text = "خاموش"
