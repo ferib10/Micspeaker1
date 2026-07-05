@@ -145,6 +145,7 @@ class MicForegroundService : Service() {
             .setContentText("صدا به اسپیکر متصل پخش می‌شود")
             .setSmallIcon(android.R.drawable.ic_btn_speak_now)
             .addAction(android.R.drawable.ic_media_pause, "توقف", stopPendingIntent)
+            .setSubText("by Farshad Babanejhad | farshad1069@msn.com")
             .setOngoing(true)
             .build()
     }
