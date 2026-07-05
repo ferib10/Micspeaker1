@@ -58,9 +58,9 @@ class MicForegroundService : Service() {
         isRunning = true
         workerThread = Thread {
             val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+            audioManager.mode = AudioManager.MODE_NORMAL
 
-            val sampleRate = 16000
+            val sampleRate = 44100
             val minBufIn = AudioRecord.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
@@ -71,10 +71,10 @@ class MicForegroundService : Service() {
                 AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT
             )
-            val bufferSize = maxOf(minBufIn, minBufOut, 2048)
+            val bufferSize = maxOf(minBufIn, minBufOut, 4096)
 
             val recorder = AudioRecord(
-                MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+                MediaRecorder.AudioSource.MIC,
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
@@ -83,8 +83,8 @@ class MicForegroundService : Service() {
 
             val track = AudioTrack(
                 AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build(),
                 AudioFormat.Builder()
                     .setSampleRate(sampleRate)
