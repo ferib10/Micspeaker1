@@ -58,21 +58,9 @@ class MicForegroundService : Service() {
         isRunning = true
         workerThread = Thread {
             val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
 
-            // اول SCO رو امتحان کن (برای هدست و اسپیکرهای دو طرفه)
-            val useSco = audioManager.isBluetoothScoAvailableOffCall
-            if (useSco) {
-                audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-                @Suppress("DEPRECATION")
-                audioManager.startBluetoothSco()
-                @Suppress("DEPRECATION")
-                audioManager.isBluetoothScoOn = true
-            } else {
-                // اگه SCO نبود از A2DP استفاده کن (اسپیکر معمولی)
-                audioManager.mode = AudioManager.MODE_NORMAL
-            }
-
-            val sampleRate = 44100
+            val sampleRate = 16000
             val minBufIn = AudioRecord.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
@@ -83,24 +71,19 @@ class MicForegroundService : Service() {
                 AudioFormat.CHANNEL_OUT_MONO,
                 AudioFormat.ENCODING_PCM_16BIT
             )
-            val bufferSize = maxOf(minBufIn, minBufOut, 4096)
+            val bufferSize = maxOf(minBufIn, minBufOut, 2048)
 
             val recorder = AudioRecord(
-                MediaRecorder.AudioSource.MIC,
+                MediaRecorder.AudioSource.VOICE_COMMUNICATION,
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
                 bufferSize
             )
 
-            val usage = if (useSco)
-                AudioAttributes.USAGE_VOICE_COMMUNICATION
-            else
-                AudioAttributes.USAGE_MEDIA
-
             val track = AudioTrack(
                 AudioAttributes.Builder()
-                    .setUsage(usage)
+                    .setUsage(AudioAttributes.USAGE_VOICE_COMMUNICATION)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build(),
                 AudioFormat.Builder()
@@ -126,12 +109,6 @@ class MicForegroundService : Service() {
                 try { recorder.release() } catch (e: Exception) { }
                 try { track.stop() } catch (e: Exception) { }
                 try { track.release() } catch (e: Exception) { }
-                if (useSco) {
-                    @Suppress("DEPRECATION")
-                    audioManager.stopBluetoothSco()
-                    @Suppress("DEPRECATION")
-                    audioManager.isBluetoothScoOn = false
-                }
                 audioManager.mode = AudioManager.MODE_NORMAL
             }
         }

@@ -38,6 +38,14 @@ class MainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         toggleButton = findViewById(R.id.toggleButton)
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val infoButton = findViewById<Button>(R.id.infoButton)
+        infoButton.setOnClickListener {
+            android.app.AlertDialog.Builder(this)
+                .setTitle("اطلاعات سازنده")
+                .setMessage("نام: Farshad Babanejhad\nایمیل: farshad1069@msn.com")
+                .setPositiveButton("باشه", null)
+                .show()
+        }
 
         toggleButton.setOnClickListener {
             if (!isActive) {
