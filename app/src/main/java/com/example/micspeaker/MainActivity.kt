@@ -10,15 +10,15 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
     private var isActive = false
     private lateinit var statusText: TextView
-    private lateinit var toggleButton: Button
+    private lateinit var toggleButton: ToggleButton
     private lateinit var audioManager: AudioManager
 
     private val requestPermissionLauncher = registerForActivityResult(
@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         if (results.values.all { it }) {
             startMic()
         } else {
+            toggleButton.isChecked = false
             Toast.makeText(this, "برای کار کردن برنامه باید مجوز میکروفون را بدهی", Toast.LENGTH_LONG).show()
         }
     }
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         statusText = findViewById(R.id.statusText)
         toggleButton = findViewById(R.id.toggleButton)
         audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
         val infoButton = findViewById<Button>(R.id.infoButton)
         infoButton.setOnClickListener {
             android.app.AlertDialog.Builder(this)
@@ -47,8 +49,8 @@ class MainActivity : AppCompatActivity() {
                 .show()
         }
 
-        toggleButton.setOnClickListener {
-            if (!isActive) {
+        toggleButton.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 checkPermissionsAndStart()
             } else {
                 stopMic()
@@ -75,19 +77,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startMic() {
-        audioManager.mode = AudioManager.MODE_NORMAL
-        audioManager.isSpeakerphoneOn = false
-
         val serviceIntent = Intent(this, MicForegroundService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(serviceIntent)
         } else {
             startService(serviceIntent)
         }
-
         isActive = true
+        toggleButton.isChecked = true
         statusText.text = "روشن — در حال پخش زنده"
-        toggleButton.text = "توقف"
     }
 
     private fun stopMic() {
@@ -95,10 +93,9 @@ class MainActivity : AppCompatActivity() {
             action = MicForegroundService.ACTION_STOP
         }
         startService(stopIntent)
-
         isActive = false
+        toggleButton.isChecked = false
         statusText.text = "خاموش"
-        toggleButton.text = "شروع"
     }
 
     override fun onDestroy() {
