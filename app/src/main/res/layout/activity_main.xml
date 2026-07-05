@@ -4,37 +4,56 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="32dp"
-    android:background="#121212">
+    android:background="#0D1B2A">
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="خاموش"
-        android:textColor="#FFFFFF"
-        android:textSize="22sp"
-        android:layout_marginBottom="40dp" />
+        android:text="آماده"
+        android:textColor="#7EB8D4"
+        android:textSize="18sp"
+        android:letterSpacing="0.15"
+        android:layout_marginBottom="16dp" />
 
-    <ToggleButton
-        android:id="@+id/toggleButton"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:textOn=""
-        android:textOff=""
-        android:background="@drawable/circle_button"
-        android:drawableTop="@drawable/mic_icon"
-        android:gravity="center"
-        android:checked="false" />
+    <FrameLayout
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginBottom="16dp">
+
+        <View
+            android:layout_width="220dp"
+            android:layout_height="220dp"
+            android:background="@drawable/circle_outer" />
+
+        <View
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_inner" />
+
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center"
+            android:textOn=""
+            android:textOff=""
+            android:background="@drawable/circle_button"
+            android:drawableTop="@drawable/mic_icon"
+            android:gravity="center"
+            android:checked="false" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/hintText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="اول به اسپیکر بلوتوث وصل شو، بعد دکمه را بزن"
-        android:textColor="#AAAAAA"
-        android:textSize="14sp"
-        android:layout_marginTop="40dp"
+        android:text="اول به اسپیکر بلوتوث وصل شو"
+        android:textColor="#4A7FA5"
+        android:textSize="13sp"
+        android:layout_marginTop="16dp"
         android:gravity="center" />
 
     <Button
@@ -42,8 +61,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="اطلاعات سازنده"
-        android:textColor="#AAAAAA"
+        android:textColor="#4A7FA5"
         android:background="@android:color/transparent"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="30dp" />
 
 </LinearLayout>
