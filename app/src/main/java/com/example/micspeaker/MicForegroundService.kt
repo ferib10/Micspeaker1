@@ -58,7 +58,19 @@ class MicForegroundService : Service() {
         isRunning = true
         workerThread = Thread {
             val audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-            audioManager.mode = AudioManager.MODE_NORMAL
+
+            // اول SCO رو امتحان کن (برای هدست و اسپیکرهای دو طرفه)
+            val useSco = audioManager.isBluetoothScoAvailableOffCall
+            if (useSco) {
+                audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+                @Suppress("DEPRECATION")
+                audioManager.startBluetoothSco()
+                @Suppress("DEPRECATION")
+                audioManager.isBluetoothScoOn = true
+            } else {
+                // اگه SCO نبود از A2DP استفاده کن (اسپیکر معمولی)
+                audioManager.mode = AudioManager.MODE_NORMAL
+            }
 
             val sampleRate = 44100
             val minBufIn = AudioRecord.getMinBufferSize(
@@ -81,10 +93,15 @@ class MicForegroundService : Service() {
                 bufferSize
             )
 
+            val usage = if (useSco)
+                AudioAttributes.USAGE_VOICE_COMMUNICATION
+            else
+                AudioAttributes.USAGE_MEDIA
+
             val track = AudioTrack(
                 AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .setUsage(usage)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
                     .build(),
                 AudioFormat.Builder()
                     .setSampleRate(sampleRate)
@@ -109,6 +126,12 @@ class MicForegroundService : Service() {
                 try { recorder.release() } catch (e: Exception) { }
                 try { track.stop() } catch (e: Exception) { }
                 try { track.release() } catch (e: Exception) { }
+                if (useSco) {
+                    @Suppress("DEPRECATION")
+                    audioManager.stopBluetoothSco()
+                    @Suppress("DEPRECATION")
+                    audioManager.isBluetoothScoOn = false
+                }
                 audioManager.mode = AudioManager.MODE_NORMAL
             }
         }
