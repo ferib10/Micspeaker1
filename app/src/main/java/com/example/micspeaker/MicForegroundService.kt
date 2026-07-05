@@ -74,7 +74,7 @@ class MicForegroundService : Service() {
             val bufferSize = maxOf(minBufIn, minBufOut, 4096)
 
             val recorder = AudioRecord(
-                MediaRecorder.AudioSource.MIC,
+               MediaRecorder.AudioSource.VOICE_COMMUNICATION,
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
